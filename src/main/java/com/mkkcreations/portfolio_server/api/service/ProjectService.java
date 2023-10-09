@@ -1,5 +1,6 @@
 package com.mkkcreations.portfolio_server.api.service;
 
+import com.mkkcreations.portfolio_server.api.model.Log;
 import com.mkkcreations.portfolio_server.api.model.Project;
 import com.mkkcreations.portfolio_server.api.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import java.util.List;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    @Autowired
+    LogService logService;
 
     @Autowired
     public ProjectService(final ProjectRepository projectRepository) {
@@ -18,6 +21,7 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
+        logService.createLog("Project", String.format("Project %s created", project.getTitle()));
         return projectRepository.save(project);
     }
 
@@ -36,8 +40,11 @@ public class ProjectService {
         existingProject.setDescription(project.getDescription());
         existingProject.setStack(project.getStack());
         existingProject.setImages(project.getImages());
+        existingProject.setUrl(project.getUrl());
+        existingProject.setGithub(project.getGithub());
         existingProject.setCreatedAt(project.getCreatedAt());
         existingProject.setUpdatedAt(new Date());
+        logService.createLog("Project", String.format("Project %s updated", project.getTitle()));
         return projectRepository.save(existingProject);
     }
 

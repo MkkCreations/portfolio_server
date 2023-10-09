@@ -1,7 +1,9 @@
 package com.mkkcreations.portfolio_server.api.service;
 
+import com.mkkcreations.portfolio_server.api.model.Log;
 import com.mkkcreations.portfolio_server.api.model.Message;
 import com.mkkcreations.portfolio_server.api.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.List;
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
+    @Autowired
+    LogService logService;
 
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
@@ -23,6 +27,7 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) {
+        logService.createLog("Message", String.format("%s send message", message.getName()));
         return messageRepository.save(message);
     }
 

@@ -1,7 +1,9 @@
 package com.mkkcreations.portfolio_server.api.service;
 
+import com.mkkcreations.portfolio_server.api.model.Log;
 import com.mkkcreations.portfolio_server.api.model.Skill;
 import com.mkkcreations.portfolio_server.api.repository.SkillRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,12 +11,15 @@ import java.util.List;
 @Service
 public class SkillService {
     private final SkillRepository skillRepository;
+    @Autowired
+    LogService logService;
 
     public SkillService(final SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
     }
 
     public Skill createSkill(Skill skill) {
+        logService.createLog("Skill", String.format("Skill %s created", skill.getName()));
         return skillRepository.save(skill);
     }
 
@@ -32,6 +37,7 @@ public class SkillService {
         existingSkill.setName(skill.getName());
         existingSkill.setDescription(skill.getDescription());
         existingSkill.setIcon(skill.getIcon());
+        logService.createLog("Skill", String.format("Skill %s updated", skill.getName()));
         return skillRepository.save(existingSkill);
     }
 

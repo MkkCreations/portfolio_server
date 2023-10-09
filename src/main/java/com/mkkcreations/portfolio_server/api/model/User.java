@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-@Document(collection = "users")
+@Document(collection = "user")
 @Data
 public class User implements UserDetails {
     @Id
@@ -27,8 +27,33 @@ public class User implements UserDetails {
     @NonNull
     private String email;
     @JsonIgnore
-    @NonNull
     private String password;
+    @NonNull
+    private String image;
+    @Nullable
+    private String bio;
+    @Nullable
+    private String location;
+    @Nullable
+    private String github;
+    @Nullable
+    private String linkedin;
+    @Nullable
+    private String number;
+
+    public User(String name, String username, String email, String password, String image, String bio, String location, String github, String linkedin, String number) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.image = image;
+        this.bio = bio;
+        this.location = location;
+        this.github = github;
+        this.linkedin = linkedin;
+        this.number = number;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.EMPTY_LIST;

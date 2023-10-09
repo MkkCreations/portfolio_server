@@ -1,6 +1,7 @@
 package com.mkkcreations.portfolio_server.api.rest;
 
 import com.mkkcreations.portfolio_server.api.dto.LoginDTO;
+import com.mkkcreations.portfolio_server.api.dto.RefreshTokenDTO;
 import com.mkkcreations.portfolio_server.api.dto.SignupDTO;
 import com.mkkcreations.portfolio_server.api.dto.TokenDTO;
 import com.mkkcreations.portfolio_server.api.jwt.JwtHelper;
@@ -8,6 +9,7 @@ import com.mkkcreations.portfolio_server.api.model.RefreshToken;
 import com.mkkcreations.portfolio_server.api.model.User;
 import com.mkkcreations.portfolio_server.api.repository.RefreshTokenRepository;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
+import com.mkkcreations.portfolio_server.api.service.LogService;
 import com.mkkcreations.portfolio_server.api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class AuthREST {
     PasswordEncoder passwordEncoder;
     @Autowired
     UserService userService;
+    @Autowired
+    LogService logService;
 
     @PostMapping("/login")
     @Transactional
@@ -44,7 +48,6 @@ public class AuthREST {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
-        System.out.println(dto.getUsername());
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setOwner(user);
@@ -53,13 +56,15 @@ public class AuthREST {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
+        logService.createLog("User", String.format("User %s logged in", user.getUsername()));
+
         return ResponseEntity.ok(new TokenDTO(user, accessToken, refreshTokenString));
     }
 
     @PostMapping("/signup")
     @Transactional
     public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO dto) {
-        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()));
+        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()), dto.getImage(), dto.getBio(), dto.getLocation(), dto.getGithub(), dto.getLinkedin(), dto.getNumber());
         userRepository.save(user);
 
         return getResponseEntity(user);
@@ -117,7 +122,7 @@ public class AuthREST {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody TokenDTO dto) {
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenDTO dto) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {
             // valid and exists in db

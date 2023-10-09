@@ -21,4 +21,12 @@ public class SignupDTO {
     @NotBlank
     @Size(min = 6, max = 60)
     private String password;
+    @NotBlank
+    private String image;
+    private String bio;
+    private String location;
+    private String website;
+    private String github;
+    private String linkedin;
+    private String number;
 }

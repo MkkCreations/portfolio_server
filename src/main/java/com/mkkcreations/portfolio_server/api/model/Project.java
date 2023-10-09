@@ -1,5 +1,6 @@
 package com.mkkcreations.portfolio_server.api.model;
 
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,15 +16,21 @@ public class Project {
     private String description;
     private List<String> stack;
     private List<String> images;
+    @Nullable
+    private String url;
+    @Nullable
+    private String github;
     private Date createdAt;
     private Date updatedAt;
 
-    public Project(String id, String title, String description, List<String> stack, List<String> images, Date createdAt, Date updatedAt) {
+    public Project(String id, String title, String description, List<String> stack, List<String> images, String url, String github, Date createdAt, Date updatedAt) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.stack = stack;
         this.images = images;
+        this.url = url;
+        this.github = github;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -65,6 +72,14 @@ public class Project {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+    public String getUrl() {return url;}
+
+    public void setUrl(String url) {this.url = url;}
+
+    public String getGithub() {return github;}
+
+    public void setGithub(String github) {this.github = github;}
 
     public Date getCreatedAt() {
         return createdAt;

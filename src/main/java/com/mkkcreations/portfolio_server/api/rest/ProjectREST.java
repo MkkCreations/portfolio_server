@@ -20,7 +20,6 @@ public class ProjectREST {
 
     @GetMapping
     public List<Project> getAllProjects() {
-        System.out.println(projectService.getAllProjects());
         return projectService.getAllProjects();
     }
 
