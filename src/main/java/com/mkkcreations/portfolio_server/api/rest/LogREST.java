@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/logs")
-@CrossOrigin(origins = "http://localhost:3000")
 public class LogREST {
     @Autowired
     LogService logService;
@@ -21,5 +20,4 @@ public class LogREST {
     public List<Log> getLogs() {
         return logService.getAllLogs();
     }
-
 }

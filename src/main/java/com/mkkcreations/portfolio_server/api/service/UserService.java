@@ -32,6 +32,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(newUser.getEmail());
         user.setImage(newUser.getImage());
         user.setBio(newUser.getBio());
+        user.setResume(newUser.getResume());
         user.setLocation(newUser.getLocation());
         user.setGithub(newUser.getGithub());
         user.setLinkedin(newUser.getLinkedin());

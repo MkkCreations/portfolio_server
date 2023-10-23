@@ -33,6 +33,8 @@ public class User implements UserDetails {
     @Nullable
     private String bio;
     @Nullable
+    private String resume;
+    @Nullable
     private String location;
     @Nullable
     private String github;
@@ -41,13 +43,14 @@ public class User implements UserDetails {
     @Nullable
     private String number;
 
-    public User(String name, String username, String email, String password, String image, String bio, String location, String github, String linkedin, String number) {
+    public User(String name, String username, String email, String password, String image, String bio, String resume, String location, String github, String linkedin, String number) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.image = image;
         this.bio = bio;
+        this.resume = resume;
         this.location = location;
         this.github = github;
         this.linkedin = linkedin;

@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/skills/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/user/data").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/user/resume").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -57,7 +58,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                            corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
+                            corsConfiguration.setAllowedOrigins(java.util.List.of("*"));
                             corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE"));
                             corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                             return corsConfiguration;

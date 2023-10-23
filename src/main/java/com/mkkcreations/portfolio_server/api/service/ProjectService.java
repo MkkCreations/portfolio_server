@@ -1,6 +1,5 @@
 package com.mkkcreations.portfolio_server.api.service;
 
-import com.mkkcreations.portfolio_server.api.model.Log;
 import com.mkkcreations.portfolio_server.api.model.Project;
 import com.mkkcreations.portfolio_server.api.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,15 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
+        project.setCreatedAt(new Date());
+        Project newProject = projectRepository.save(project);
         logService.createLog("Project", String.format("Project %s created", project.getTitle()));
-        return projectRepository.save(project);
+        return newProject;
     }
 
     public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+        List<Project> projects = projectRepository.findAll();
+        return projects;
     }
 
     public Project getProjectById(String id) {

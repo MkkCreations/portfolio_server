@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthREST {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -64,7 +63,7 @@ public class AuthREST {
     @PostMapping("/signup")
     @Transactional
     public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO dto) {
-        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()), dto.getImage(), dto.getBio(), dto.getLocation(), dto.getGithub(), dto.getLinkedin(), dto.getNumber());
+        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()), dto.getImage(), dto.getBio(), null, dto.getLocation(), dto.getGithub(), dto.getLinkedin(), dto.getNumber());
         userRepository.save(user);
 
         return getResponseEntity(user);

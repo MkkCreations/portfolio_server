@@ -13,7 +13,7 @@ import java.io.IOException;
 public class AccessTokenEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException {
-        log.error("unauthorized", authException);
+        // log.error("unauthorized", authException);
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
