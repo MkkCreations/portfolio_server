@@ -1,9 +1,6 @@
 package com.mkkcreations.portfolio_server.api.rest;
 
-import com.mkkcreations.portfolio_server.api.dto.LoginDTO;
-import com.mkkcreations.portfolio_server.api.dto.RefreshTokenDTO;
-import com.mkkcreations.portfolio_server.api.dto.SignupDTO;
-import com.mkkcreations.portfolio_server.api.dto.TokenDTO;
+import com.mkkcreations.portfolio_server.api.dto.*;
 import com.mkkcreations.portfolio_server.api.jwt.JwtHelper;
 import com.mkkcreations.portfolio_server.api.model.RefreshToken;
 import com.mkkcreations.portfolio_server.api.model.User;
@@ -18,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,5 +132,21 @@ public class AuthREST {
         }
 
         throw new BadCredentialsException("invalid token");
+    }
+
+    @PutMapping("/change-password/{id}")
+    public ResponseEntity<?> changePassword(@AuthenticationPrincipal User user, @RequestBody ChangePassDTO dto, @PathVariable String id ) {
+        if (!user.getId().equals(id)) {
+            return ResponseEntity.badRequest().body("invalid user");
+        }
+        if (!passwordEncoder.matches(dto.getActualPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("invalid password");
+        } else if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body("passwords do not match");
+        } else {
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        }
     }
 }
