@@ -38,6 +38,7 @@ public class AuthREST {
     UserService userService;
     @Autowired
     LogService logService;
+    String invalidToken = "invalid token";
 
     @PostMapping("/login")
     @Transactional
@@ -87,7 +88,7 @@ public class AuthREST {
             return ResponseEntity.ok().build();
         }
 
-        throw new BadCredentialsException("invalid token");
+        throw new BadCredentialsException(invalidToken);
     }
 
     @PostMapping("/logout-all")
@@ -100,7 +101,7 @@ public class AuthREST {
             return ResponseEntity.ok().build();
         }
 
-        throw new BadCredentialsException("invalid token");
+        throw new BadCredentialsException(invalidToken);
     }
 
     @PostMapping("/access-token")
@@ -115,7 +116,7 @@ public class AuthREST {
             return ResponseEntity.ok(new TokenDTO(user, accessToken, refreshTokenString));
         }
 
-        throw new BadCredentialsException("invalid token");
+        throw new BadCredentialsException(invalidToken);
     }
 
     @PostMapping("/refresh-token")
@@ -131,7 +132,7 @@ public class AuthREST {
             return getResponseEntity(user);
         }
 
-        throw new BadCredentialsException("invalid token");
+        throw new BadCredentialsException(invalidToken);
     }
 
     @PutMapping("/change-password/{id}")
@@ -146,6 +147,7 @@ public class AuthREST {
         } else {
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
+            logService.createLog("User", String.format("User %s changed password", user.getUsername()));
             return ResponseEntity.ok().build();
         }
     }

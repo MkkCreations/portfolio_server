@@ -1,6 +1,5 @@
 package com.mkkcreations.portfolio_server.api.service;
 
-import com.mkkcreations.portfolio_server.api.model.Log;
 import com.mkkcreations.portfolio_server.api.model.User;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ public class UserService implements UserDetailsService {
     UserRepository userRepository;
     @Autowired
     LogService logService;
+
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
@@ -25,6 +25,11 @@ public class UserService implements UserDetailsService {
     public User findById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("user id not found"));
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
     }
 
     public User update(User user, User newUser) {

@@ -27,8 +27,9 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) {
+        Message newMessage = messageRepository.save(message);
         logService.createLog("Message", String.format("%s send message", message.getName()));
-        return messageRepository.save(message);
+        return newMessage;
     }
 
     public Message updateMessage(Message message) {
@@ -37,5 +38,6 @@ public class MessageService {
 
     public void deleteMessage(String id) {
         messageRepository.deleteById(id);
+        logService.createLog("Message", String.format("Message with id %s deleted", id));
     }
 }

@@ -15,13 +15,11 @@ import java.io.File;
 @RequestMapping("/user")
 public class UserREST {
     @Autowired
-    UserRepository userRepository;
-    @Autowired
     UserService userService;
 
     @GetMapping("/data")
     public ResponseEntity<?> data() {
-        return ResponseEntity.ok(userRepository.findByUsername("khaffou"));
+        return ResponseEntity.ok(userService.findByUsername("khaffou"));
     }
 
     @GetMapping("/me")
@@ -32,7 +30,7 @@ public class UserREST {
     @GetMapping("/{id}")
     @PreAuthorize("#user.id == #id")
     public ResponseEntity<?> me(@AuthenticationPrincipal User user, @PathVariable String id) {
-        return ResponseEntity.ok(userRepository.findById(id));
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PutMapping("/{id}")

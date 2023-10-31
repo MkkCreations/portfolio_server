@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String email;
     @JsonIgnore
     private String password;
-    @NonNull
+    @Nullable
     private String image;
     @Nullable
     private String bio;

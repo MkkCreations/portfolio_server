@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/user/data").permitAll()
                         .requestMatchers(HttpMethod.GET,"/user/resume").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/message").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
