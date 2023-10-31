@@ -3,11 +3,14 @@ package com.mkkcreations.portfolio_server.api.service;
 import com.mkkcreations.portfolio_server.api.model.User;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -49,4 +52,5 @@ public class UserService implements UserDetailsService {
     public User create(User user) {
         return userRepository.save(user);
     }
+
 }

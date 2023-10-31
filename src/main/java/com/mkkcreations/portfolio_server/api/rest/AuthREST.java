@@ -46,7 +46,6 @@ public class AuthREST {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
-
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setOwner(user);
         refreshTokenRepository.save(refreshToken);
@@ -62,7 +61,7 @@ public class AuthREST {
     @PostMapping("/signup")
     @Transactional
     public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO dto) {
-        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()), dto.getImage(), dto.getBio(), null, dto.getLocation(), dto.getGithub(), dto.getLinkedin(), dto.getNumber());
+        User user = new User(dto.getName(), dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()), dto.getImage(), dto.getBio(), null, dto.getLocation(), dto.getGithub(), dto.getLinkedin(), dto.getNumber(), "USER");
         userRepository.save(user);
 
         return getResponseEntity(user);

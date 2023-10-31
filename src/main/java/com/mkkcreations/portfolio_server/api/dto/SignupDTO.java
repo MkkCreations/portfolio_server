@@ -19,9 +19,8 @@ public class SignupDTO {
     @Email
     private String email;
     @NotBlank
-    @Size(min = 6, max = 60)
+    @Size(min = 6)
     private String password;
-    @NotBlank
     private String image;
     private String bio;
     private String location;

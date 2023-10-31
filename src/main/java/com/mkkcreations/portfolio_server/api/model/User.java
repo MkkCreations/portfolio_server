@@ -42,8 +42,10 @@ public class User implements UserDetails {
     private String linkedin;
     @Nullable
     private String number;
+    @NonNull
+    private String role;
 
-    public User(String name, String username, String email, String password, String image, String bio, String resume, String location, String github, String linkedin, String number) {
+    public User(String name, String username, String email, String password, String image, String bio, String resume, String location, String github, String linkedin, String number, String role) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -55,11 +57,12 @@ public class User implements UserDetails {
         this.github = github;
         this.linkedin = linkedin;
         this.number = number;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.EMPTY_LIST;
+        return "ADMIN".equals(role) ? Collections.singletonList((GrantedAuthority) () -> "ROLE_ADMIN") : Collections.singletonList((GrantedAuthority) () -> "ROLE_USER");
     }
 
     @Override
