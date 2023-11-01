@@ -8,6 +8,7 @@ import com.mkkcreations.portfolio_server.api.repository.RefreshTokenRepository;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import com.mkkcreations.portfolio_server.api.service.LogService;
 import com.mkkcreations.portfolio_server.api.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,7 +45,7 @@ public class AuthREST {
 
     @PostMapping("/login")
     @Transactional
-    public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+    public ResponseEntity<?> login(@RequestBody LoginDTO dto, HttpServletRequest request) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
@@ -53,7 +56,7 @@ public class AuthREST {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        logService.createLog("User", String.format("User %s logged in", user.getUsername()));
+        logService.createLog("User", String.format("User %s logged in, from %s ip address", user.getUsername(), request.getRemoteAddr()), Map.of("user", user.getUsername(), "ip", request.getRemoteAddr()));
 
         return ResponseEntity.ok(new TokenDTO(user, accessToken, refreshTokenString));
     }
@@ -119,7 +122,7 @@ public class AuthREST {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenDTO dto) {
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenDTO dto, HttpServletRequest request) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {
             // valid and exists in db
@@ -128,6 +131,7 @@ public class AuthREST {
 
             User user = userService.findById(jwtHelper.getUserIdFromRefreshToken(refreshTokenString));
 
+            logService.createLog("User", String.format("User %s logged in, from %s ip address", user.getUsername(), request.getRemoteAddr()), Map.of("user", user.getUsername(), "ip", request.getRemoteAddr()));
             return getResponseEntity(user);
         }
 
@@ -146,7 +150,7 @@ public class AuthREST {
         } else {
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
-            logService.createLog("User", String.format("User %s changed password", user.getUsername()));
+            logService.createLog("User", String.format("User %s changed password", user.getUsername()), Map.of("user", user.getUsername()));
             return ResponseEntity.ok().build();
         }
     }

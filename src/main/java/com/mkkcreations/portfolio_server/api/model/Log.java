@@ -22,6 +22,10 @@ public class Log {
         this.operations = operations;
     }
 
+    public Log() {
+
+    }
+
     public String getId() {
         return id;
     }

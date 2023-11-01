@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,7 +46,10 @@ public class UserService implements UserDetailsService {
         user.setGithub(newUser.getGithub());
         user.setLinkedin(newUser.getLinkedin());
         user.setNumber(newUser.getNumber());
-        logService.createLog("User", String.format("User %s updated info", user.getUsername()));
+        logService.createLog(
+                "User",
+                String.format("User %s updated info", user.getUsername()),
+                Map.of("user", user.getUsername()));
         return userRepository.save(user);
     }
 

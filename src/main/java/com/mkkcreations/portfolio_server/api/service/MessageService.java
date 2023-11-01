@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MessageService {
-    private final MessageRepository messageRepository;
+    @Autowired
+    MessageRepository messageRepository;
     @Autowired
     LogService logService;
-
-    public MessageService(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
-    }
 
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
@@ -28,7 +26,10 @@ public class MessageService {
 
     public Message createMessage(Message message) {
         Message newMessage = messageRepository.save(message);
-        logService.createLog("Message", String.format("%s send message", message.getName()));
+        logService.createLog(
+                "Message",
+                String.format("%s send message", message.getName()),
+                Map.of("name", message.getName(),  "message", message.getMessage()));
         return newMessage;
     }
 
@@ -38,6 +39,6 @@ public class MessageService {
 
     public void deleteMessage(String id) {
         messageRepository.deleteById(id);
-        logService.createLog("Message", String.format("Message with id %s deleted", id));
+        logService.createLog("Message", String.format("Message with id %s deleted", id), null);
     }
 }

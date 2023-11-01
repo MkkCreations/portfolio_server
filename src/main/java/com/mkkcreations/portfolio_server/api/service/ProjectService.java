@@ -7,28 +7,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProjectService {
-    private final ProjectRepository projectRepository;
+    @Autowired
+    ProjectRepository projectRepository;
     @Autowired
     LogService logService;
-
-    @Autowired
-    public ProjectService(final ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
 
     public Project createProject(Project project) {
         project.setCreatedAt(new Date());
         Project newProject = projectRepository.save(project);
-        logService.createLog("Project", String.format("Project %s created", project.getTitle()));
+        logService.createLog(
+                "Project",
+                String.format("Project %s created", project.getTitle()),
+                Map.of("title", project.getTitle()));
         return newProject;
     }
 
     public List<Project> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
-        return projects;
+        return projectRepository.findAll();
     }
 
     public Project getProjectById(String id) {
@@ -46,7 +45,10 @@ public class ProjectService {
         existingProject.setGithub(project.getGithub());
         existingProject.setCreatedAt(project.getCreatedAt());
         existingProject.setUpdatedAt(new Date());
-        logService.createLog("Project", String.format("Project %s updated", project.getTitle()));
+        logService.createLog(
+                "Project",
+                String.format("Project %s updated", project.getTitle()),
+                Map.of("title", project.getTitle()));
         return projectRepository.save(existingProject);
     }
 
