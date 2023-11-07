@@ -56,7 +56,9 @@ public class AuthREST {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        logService.createLog("User", String.format("User %s logged in, from %s ip address", user.getUsername(), request.getRemoteAddr()), Map.of("user", user.getUsername(), "ip", request.getRemoteAddr()));
+        String ip = request.getHeader("X-Forwarded-For");
+
+        logService.createLog("User", String.format("User %s logged in, from %s ip address", user.getUsername(), request.getRemoteAddr()), Map.of("user", user.getUsername(), "ip", ip));
 
         return ResponseEntity.ok(new TokenDTO(user, accessToken, refreshTokenString));
     }
