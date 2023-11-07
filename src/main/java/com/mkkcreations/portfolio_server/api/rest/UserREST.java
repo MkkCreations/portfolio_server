@@ -4,6 +4,7 @@ import com.mkkcreations.portfolio_server.api.model.User;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import com.mkkcreations.portfolio_server.api.service.LogService;
 import com.mkkcreations.portfolio_server.api.service.UserService;
+import com.mkkcreations.portfolio_server.api.tools.HttpTools;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.util.Map;
 
 @RestController
@@ -25,11 +27,13 @@ public class UserREST {
 
     @GetMapping("/data")
     public ResponseEntity<?> data(HttpServletRequest request) {
-        System.out.println(request.toString());
+        String ip = InetAddress.getLoopbackAddress().getHostAddress();
+
+        System.out.println(ip);
         logService.createLog(
                 "User",
                 String.format("User data requested, from %s ip address", request.getRemoteAddr()),
-                Map.of("ip", request.getRemoteAddr()));
+                Map.of("ip", ip));
         return ResponseEntity.ok(userService.findByUsername("khaffou"));
     }
 

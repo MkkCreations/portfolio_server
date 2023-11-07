@@ -8,6 +8,7 @@ import com.mkkcreations.portfolio_server.api.repository.RefreshTokenRepository;
 import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import com.mkkcreations.portfolio_server.api.service.LogService;
 import com.mkkcreations.portfolio_server.api.service.UserService;
+import com.mkkcreations.portfolio_server.api.tools.HttpTools;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.InetAddress;
 import java.util.Map;
 
 @RestController
@@ -56,7 +58,7 @@ public class AuthREST {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        String ip = request.getHeader("X-Forwarded-For");
+        String ip = InetAddress.getLoopbackAddress().getHostAddress();
 
         logService.createLog("User", String.format("User %s logged in, from %s ip address", user.getUsername(), request.getRemoteAddr()), Map.of("user", user.getUsername(), "ip", ip));
 
