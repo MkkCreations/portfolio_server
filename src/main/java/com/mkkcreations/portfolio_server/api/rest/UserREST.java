@@ -1,11 +1,8 @@
 package com.mkkcreations.portfolio_server.api.rest;
 
 import com.mkkcreations.portfolio_server.api.model.User;
-import com.mkkcreations.portfolio_server.api.repository.UserRepository;
 import com.mkkcreations.portfolio_server.api.service.LogService;
 import com.mkkcreations.portfolio_server.api.service.UserService;
-import com.mkkcreations.portfolio_server.api.tools.HttpTools;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,14 +23,11 @@ public class UserREST {
     LogService logService;
 
     @GetMapping("/data")
-    public ResponseEntity<?> data(HttpServletRequest request) {
-        String ip = InetAddress.getLoopbackAddress().getHostAddress();
-
-        System.out.println(ip);
+    public ResponseEntity<?> data() {
         logService.createLog(
                 "User",
-                String.format("User data requested, from %s ip address", request.getRemoteAddr()),
-                Map.of("ip", ip));
+                "User data requested",
+                null);
         return ResponseEntity.ok(userService.findByUsername("khaffou"));
     }
 
