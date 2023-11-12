@@ -27,7 +27,7 @@ public class UserREST {
         logService.createLog(
                 "User",
                 "User data requested",
-                null);
+                Map.of());
         return ResponseEntity.ok(userService.findByUsername("khaffou"));
     }
 
